@@ -1,9 +1,8 @@
-package hu.elte.haladojava.matrix;
+package hu.elte.math;
 
-/**
- * This class has many bugs. Find and fix them by covering the code with appropriate unit tests.
- *
- */
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Matrix {
 
   private final int[] elements;
@@ -17,15 +16,37 @@ public class Matrix {
   }
 
   public void add(Matrix other) {
+    if (other.getHeight() != height || other.getWidth() != width) {
+      throw new IllegalArgumentException("Illegal matrix dimensions.");
+    }
+
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        elements[width * i + j] += other.elements[width * 1 + j];
+        elements[height * i + j] += other.elements[height * i + j];
       }
     }
   }
 
   public static Matrix multiply(Matrix matrixA, Matrix matrixB) {
-    return null; // TODO
+    if (matrixA.getWidth() != matrixB.getHeight()) {
+      throw new IllegalArgumentException("Illegal matrix dimensions.");
+    }
+
+    Matrix matrixResult = new Matrix(matrixA.getHeight(), matrixB.getWidth());
+
+    for (int i = 0; i < matrixResult.getHeight(); i++) {
+      for (int j = 0; j < matrixResult.getWidth(); j++) {
+        int dotProduct = 0;
+
+        for (int k = 0; k < matrixA.getWidth(); k++) {
+          dotProduct += matrixA.getElement(i, k) * matrixB.getElement(k, j);
+        }
+
+        matrixResult.setElement(dotProduct, i, j);
+      }
+    }
+
+    return matrixResult;
   }
 
   public int getElement(int row, int column) {
@@ -36,34 +57,68 @@ public class Matrix {
     elements[width * row + column] = element;
   }
 
-  public int getWidth() {
-    return width;
-  }
-
   public int getHeight() {
     return height;
   }
 
-  @Override
-  public Matrix clone() {
-    return this;
+  public int getWidth() {
+    return width;
   }
 
-  /**
-   * Renders as a matrix as [r1a, r1b, ..., r1X | r2a, r2b, ..., r2X | rNa, rNb, ..., rNX ] on one line.
-   */
+  @Override
+  public Matrix clone() {
+    try {
+      return (Matrix) super.clone();
+    } catch (CloneNotSupportedException e) {
+      Matrix clonedMatrix = new Matrix(height, width);
+
+      for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+          clonedMatrix.setElement(elements[height * i + j], i, j);
+        }
+      }
+
+      return clonedMatrix;
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (!(o instanceof Matrix)) return false;
+    Matrix matrix = (Matrix) o;
+
+    return getHeight() == matrix.getHeight() &&
+            getWidth() == matrix.getWidth() &&
+            Arrays.equals(elements, matrix.elements);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(getHeight(), getWidth());
+    result = 31 * result + Arrays.hashCode(elements);
+    return result;
+  }
+
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder("[");
+
     for (int i = 0; i < height; i++) {
-      for (int j = 0; i < width; j++) {
-        sb.append(elements[width * i + j]);
+      for (int j = 0; j < width; j++) {
+        stringBuilder.append(elements[width * i + j]);
+
         if (j < width - 1) {
-          sb.append(' ');
+          stringBuilder.append(" ");
+        } else if (i < height - 1) {
+          stringBuilder.append(" | ");
         }
       }
     }
-    return sb.toString();
-  }
 
+    stringBuilder.append("]");
+
+    return stringBuilder.toString();
+  }
 }
