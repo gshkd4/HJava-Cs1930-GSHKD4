@@ -1,6 +1,5 @@
-package hu.elte.util;
+package hu.elte.services;
 
-import hu.elte.services.StatisticsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
