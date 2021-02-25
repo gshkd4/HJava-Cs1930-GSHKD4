@@ -17,6 +17,12 @@ public class BioStatUtil {
     }
 
     public static int countOlderThan(int age, InputStream input) {
+        int maximumHeight = 100;
+        if (age > maximumHeight) {
+            throw new IllegalArgumentException(String.format(
+                    "Age must not be larger than %d.", maximumHeight));
+        }
+
         return (int) read(input).filter(person -> person.getAge() > age).count();
     }
 

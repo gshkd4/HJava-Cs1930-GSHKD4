@@ -3,12 +3,14 @@ package hu.elte.util;
 import hu.elte.util.BioStatUtil.Gender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 public class BioStatUtilTest {
 
@@ -30,6 +32,12 @@ public class BioStatUtilTest {
         int actualCount = BioStatUtil.countOlderThan(age, inputStream);
 
         Assertions.assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testCountOlderThanInvalidAge() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> BioStatUtil.countOlderThan(101, inputStream));
     }
 
     @ParameterizedTest(name = "{0} = age, {1} = expectedAverageHeight")
