@@ -2,4 +2,4 @@
 
 This is a repository for my Advanced Java Class. It is for studying and experimenting purposes only.
 
-[My most important resource.](https://pitta.web.elte.hu/java_advanced2.html)
+[Useful resource.](https://pitta.web.elte.hu/java_advanced2.html)
